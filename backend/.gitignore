@@ -1,0 +1,6 @@
+/.idea
+.gitignore
+/.metadata
+**/resources/*.json
+**/StoredCredentials
+/target/
