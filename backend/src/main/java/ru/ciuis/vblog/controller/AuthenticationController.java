@@ -1,7 +1,9 @@
 package ru.ciuis.vblog.controller;
 
 import org.springframework.http.HttpStatus;
+import ru.ciuis.vblog.exception.EmailSendException;
 import ru.ciuis.vblog.exception.EmailTakenException;
+import ru.ciuis.vblog.exception.FailedVerificationException;
 import ru.ciuis.vblog.exception.UserNotExistException;
 import ru.ciuis.vblog.model.AppUser;
 import ru.ciuis.vblog.model.RegistrationForm;
@@ -39,6 +41,7 @@ public class AuthenticationController {
         return new ResponseEntity<String>("User doesn't exist", HttpStatus.NOT_FOUND);
     }
 
+    //goto http://localhost:8000/auth/update/phone
     @PutMapping("/update/phone")
     public AppUser updatePhone(@RequestBody LinkedHashMap<String, String> body) {
         String username = body.get("username");
@@ -50,10 +53,38 @@ public class AuthenticationController {
         return userService.updateUser(user);
     }
 
+    @ExceptionHandler({EmailSendException.class})
+    public ResponseEntity<String> handleEmailFailed() {
+        return new ResponseEntity<String>("Email failed to send", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    //goto http://localhost:8000/auth/email/verification
     @PostMapping("/email/verification")
     public ResponseEntity<String> createVerificationCode(@RequestBody LinkedHashMap<String, String> body) {
         userService.generateVerificationCode(body.get("username"));
 
         return new ResponseEntity<String>("Verification code sent by email", HttpStatus.OK);
+    }
+
+    @ExceptionHandler({FailedVerificationException.class})
+    public ResponseEntity<String> handlerFailedVerification() {
+        return new ResponseEntity<String>("Verification code is not correct", HttpStatus.CONFLICT);
+    }
+
+
+    @PostMapping("/email/verify")
+    public AppUser verifyEmail(@RequestBody LinkedHashMap<String, String> body) {
+        Long code = Long.parseLong(body.get("code"));
+        String username = body.get("username");
+
+        return userService.verifyEmail(username, code);
+    }
+
+    @PutMapping("/update/password")
+    public AppUser updatePassword(@RequestBody LinkedHashMap<String, String> body) {
+        String username = body.get("username");
+        String password = body.get("password");
+
+        return userService.setPassword(username, password);
     }
 }

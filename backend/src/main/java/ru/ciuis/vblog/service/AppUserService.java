@@ -1,6 +1,9 @@
 package ru.ciuis.vblog.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.ciuis.vblog.exception.EmailSendException;
 import ru.ciuis.vblog.exception.EmailTakenException;
+import ru.ciuis.vblog.exception.FailedVerificationException;
 import ru.ciuis.vblog.exception.UserNotExistException;
 import ru.ciuis.vblog.model.AppUser;
 import ru.ciuis.vblog.model.Authority;
@@ -17,11 +20,18 @@ import java.util.Set;
 public class AppUserService {
     private final AppUserRepository userRepository;
     private final AuthorityRepository authorityRepository;
+    private final MailService mailService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AppUserService(AppUserRepository userRepository, AuthorityRepository authorityRepository) {
+    public AppUserService(AppUserRepository userRepository,
+                          AuthorityRepository authorityRepository,
+                          MailService mailService,
+                          PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
+        this.mailService = mailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AppUser getUserByName(String username) {
@@ -73,7 +83,35 @@ public class AppUserService {
 
         user.setVerification(generateVerificationCode());
 
+        try {
+            mailService.sendMail(user.getEmail(), "Verification code", "Your verification code: " + user.getVerification());
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new EmailSendException();
+        }
+
         userRepository.save(user);
+    }
+
+    public AppUser verifyEmail(String username, Long code) {
+        AppUser user = userRepository.findByUsername(username).orElseThrow(UserNotExistException::new);
+
+        if (code.equals(user.getVerification())) {
+            user.setIsVerified(true);
+            user.setVerification(null);
+            return userRepository.save(user);
+        } else {
+            throw new FailedVerificationException();
+        }
+    }
+
+    public AppUser setPassword(String username, String password) {
+        AppUser user = userRepository.findByUsername(username).orElseThrow(UserNotExistException::new);
+        String encodedPassword = passwordEncoder.encode(password);
+
+        user.setPassword(encodedPassword);
+
+        return userRepository.save(user);
     }
 
     private String generateUsername(String name) {
@@ -84,4 +122,5 @@ public class AppUserService {
     private Long generateVerificationCode() {
         return (long)Math.floor(Math.random() * 1_000_000);
     }
+
 }
