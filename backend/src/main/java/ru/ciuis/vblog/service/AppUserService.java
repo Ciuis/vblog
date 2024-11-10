@@ -49,10 +49,10 @@ public class AppUserService {
     public AppUser registerUser(RegistrationForm registrationForm) {
         AppUser user = new AppUser();
 
-        user.setFirstname(registrationForm.getFirstname());
-        user.setLastname(registrationForm.getLastname());
+        user.setFirstName(registrationForm.getFirstName());
+        user.setLastName(registrationForm.getLastName());
 
-        String name = user.getFirstname() + user.getLastname();
+        String name = user.getFirstName() + user.getLastName();
         boolean isTaken = true;
         String tmpName = "";
 
@@ -65,7 +65,7 @@ public class AppUserService {
 
         user.setUsername(tmpName);
         user.setEmail(registrationForm.getEmail());
-        user.setBirthDate(registrationForm.getBirthdate());
+        user.setBirthDate(registrationForm.getBirthDate());
         Set<Authority> authorities = user.getAuthorities();
 
         authorities.add(authorityRepository.findByAuthority("USER").get());

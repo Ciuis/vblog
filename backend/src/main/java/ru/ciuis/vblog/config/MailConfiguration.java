@@ -43,7 +43,7 @@ public class MailConfiguration {
                 .setAccessType("offline")
                 .build();
 
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(9999).build();
 
         return new AuthorizationCodeInstalledApp(codeFlow, receiver).authorize("user");
     }

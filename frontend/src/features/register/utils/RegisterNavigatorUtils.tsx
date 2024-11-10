@@ -18,3 +18,11 @@ export const displayIcon = (step: number):JSX.Element => {
             return <></>
     }
 }
+
+export const stepBtnVisibility = (step: number): string => {
+    if (step === 4 || step >= 6) {
+        return "reg-nav-btn-disabled"
+    }
+
+    return "reg-nav-btn"
+}

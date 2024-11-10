@@ -1,4 +1,12 @@
-.register-module {
+.register-container {
     height: 100%;
     width: 100%;
+}
+
+.reg-module-content {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }

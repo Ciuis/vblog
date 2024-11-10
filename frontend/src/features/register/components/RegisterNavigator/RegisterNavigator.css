@@ -17,6 +17,12 @@
     align-items: center;
 }
 
+.reg-nav-btn-disabled {
+    height: 40px;
+    width: 40px;
+    margin-right: 40px;
+}
+
 .reg-nav-btn:hover {
     z-index: 2;
     background-color: rgba(0,0,0,0.5);

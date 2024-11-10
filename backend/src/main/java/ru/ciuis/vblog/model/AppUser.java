@@ -23,11 +23,11 @@ public class AppUser {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "firstname")
-    private String firstname;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column(name = "lastname")
-    private String lastname;
+    @Column(name = "last_name")
+    private String lastName;
 
     @Column(name = "username", unique = true)
     private String username;
@@ -51,6 +51,7 @@ public class AppUser {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
+
     private Set<Authority> authorities;
 
     private Boolean isVerified;

@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin("*")
 public class AuthenticationController {
     private final AppUserService userService;
 
@@ -70,7 +71,6 @@ public class AuthenticationController {
     public ResponseEntity<String> handlerFailedVerification() {
         return new ResponseEntity<String>("Verification code is not correct", HttpStatus.CONFLICT);
     }
-
 
     @PostMapping("/email/verify")
     public AppUser verifyEmail(@RequestBody LinkedHashMap<String, String> body) {

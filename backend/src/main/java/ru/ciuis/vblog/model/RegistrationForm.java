@@ -10,18 +10,18 @@ import java.sql.Date;
 @Setter
 @ToString
 public class RegistrationForm {
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String email;
-    private Date birthdate;
+    private Date birthDate;
 
     public RegistrationForm() {
     }
 
-    public RegistrationForm(String firstname, String lastname, String email, Date birthdate) {
-        this.firstname = firstname;
-        this.lastname = lastname;
+    public RegistrationForm(String firstName, String lastName, String email, Date birthDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.birthdate = birthdate;
+        this.birthDate = birthDate;
     }
 }
