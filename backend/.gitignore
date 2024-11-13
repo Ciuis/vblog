@@ -4,3 +4,4 @@
 **/resources/*.json
 **/StoredCredentials
 /target/
+/src/main/resources/certs/

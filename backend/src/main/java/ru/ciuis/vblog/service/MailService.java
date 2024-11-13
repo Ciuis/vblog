@@ -29,7 +29,7 @@ public class MailService {
         MimeMessage email = new MimeMessage(session);
 
         try {
-            email.setFrom(new InternetAddress("denis.v.krasnikov@gmail.com"));
+            email.setFrom(new InternetAddress("vblogauthservice@gmail.com"));
             email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(address));
             email.setSubject(subject);
             email.setText(content);

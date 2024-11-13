@@ -1,5 +1,8 @@
 package ru.ciuis.vblog;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.ciuis.vblog.config.RSAKeyProperties;
 import ru.ciuis.vblog.model.AppUser;
 import ru.ciuis.vblog.model.Authority;
 import ru.ciuis.vblog.repository.AppUserRepository;
@@ -11,20 +14,34 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @SpringBootApplication
+@EnableConfigurationProperties(RSAKeyProperties.class)
 public class App extends SpringApplication {
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
     }
 
     @Bean
-    CommandLineRunner run(AuthorityRepository authRepo, AppUserService userService) {
+    CommandLineRunner run(AuthorityRepository authRepo, AppUserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            authRepo.save(new Authority(1L, "USER"));
-/*            AppUser u = new AppUser();
-            u.setFirstname("Unknown");
-            u.setLastname("Coder");
-            userService.registerUser(u);*/
+            Authority r = authRepo.save(new Authority(1L, "USER"));
+            Set<Authority> authorities = new HashSet<>();
+
+            authorities.add(r);
+
+            AppUser u = new AppUser();
+            u.setAuthorities(authorities);
+            u.setFirstName("Manuel");
+            u.setLastName("Sanchez");
+            u.setEmail("manuelsanchez@email.com");
+            u.setUsername("manuel213452");
+            u.setPassword(passwordEncoder.encode("password123"));
+            u.setIsVerified(true);
+
+            userRepository.save(u);
         };
     }
 }

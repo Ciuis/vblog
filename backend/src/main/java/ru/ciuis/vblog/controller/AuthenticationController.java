@@ -1,17 +1,23 @@
 package ru.ciuis.vblog.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import ru.ciuis.vblog.exception.EmailSendException;
 import ru.ciuis.vblog.exception.EmailTakenException;
 import ru.ciuis.vblog.exception.FailedVerificationException;
 import ru.ciuis.vblog.exception.UserNotExistException;
 import ru.ciuis.vblog.model.AppUser;
+import ru.ciuis.vblog.model.LoginResponse;
 import ru.ciuis.vblog.model.RegistrationForm;
 import ru.ciuis.vblog.service.AppUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.ciuis.vblog.service.TokenService;
 
 import java.util.LinkedHashMap;
 
@@ -20,10 +26,14 @@ import java.util.LinkedHashMap;
 @CrossOrigin("*")
 public class AuthenticationController {
     private final AppUserService userService;
+    private final TokenService tokenService;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthenticationController(AppUserService userService) {
+    public AuthenticationController(AppUserService userService, TokenService tokenService, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.tokenService = tokenService;
+        this.authenticationManager = authenticationManager;
     }
 
     @ExceptionHandler({EmailTakenException.class})
@@ -86,5 +96,20 @@ public class AuthenticationController {
         String password = body.get("password");
 
         return userService.setPassword(username, password);
+    }
+
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LinkedHashMap<String, String> body) {
+        String username = body.get("username");
+        String password = body.get("password");
+
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+            String token = tokenService.generateToken(auth);
+            return new LoginResponse(userService.getUserByName(username), token);
+        } catch (AuthenticationException e) {
+            return new LoginResponse(null, "");
+        }
     }
 }

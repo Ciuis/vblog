@@ -1,37 +1,46 @@
 package ru.ciuis.vblog.service;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.ciuis.vblog.exception.EmailSendException;
-import ru.ciuis.vblog.exception.EmailTakenException;
-import ru.ciuis.vblog.exception.FailedVerificationException;
-import ru.ciuis.vblog.exception.UserNotExistException;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import ru.ciuis.vblog.exception.*;
 import ru.ciuis.vblog.model.AppUser;
 import ru.ciuis.vblog.model.Authority;
+import ru.ciuis.vblog.model.Image;
 import ru.ciuis.vblog.model.RegistrationForm;
 import ru.ciuis.vblog.repository.AppUserRepository;
 import ru.ciuis.vblog.repository.AuthorityRepository;
 
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
-public class AppUserService {
+public class AppUserService implements UserDetailsService {
     private final AppUserRepository userRepository;
     private final AuthorityRepository authorityRepository;
     private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
+    private final ImageService imageService;
 
     @Autowired
     public AppUserService(AppUserRepository userRepository,
                           AuthorityRepository authorityRepository,
                           MailService mailService,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder,
+                          ImageService imageService) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.mailService = mailService;
         this.passwordEncoder = passwordEncoder;
+        this.imageService = imageService;
     }
 
     public AppUser getUserByName(String username) {
@@ -123,4 +132,31 @@ public class AppUserService {
         return (long)Math.floor(Math.random() * 1_000_000);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        AppUser u = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Set<GrantedAuthority> authorities = u.getAuthorities()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+                .collect(Collectors.toSet());
+
+        return new User(u.getUsername(), u.getPassword(), authorities);
+    }
+
+    public AppUser setProfileBannerPicture(String username, MultipartFile file, String prefix)
+            throws UnableToSavePhotoException {
+        AppUser user = userRepository.findByUsername(username).orElseThrow(UserNotExistException::new);
+
+        Image image = imageService.uploadImage(file, prefix);
+
+        if (prefix.equals("pimg")) {
+            user.setProfilePicture(image);
+        } else {
+            user.setBannerPicture(image);
+        }
+
+        return userRepository.save(user);
+    }
 }

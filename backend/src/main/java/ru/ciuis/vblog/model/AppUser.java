@@ -15,7 +15,6 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode
 public class AppUser {
     @Id
@@ -45,13 +44,42 @@ public class AppUser {
     @Column(name = "birthdate")
     private Date birthDate;
 
+    private String bio;
+    private String nickname;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_picture", referencedColumnName="image_id")
+    private Image profilePicture;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "banner_picture", referencedColumnName="image_id")
+    private Image bannerPicture;
+
+    @ManyToMany(fetch=FetchType.EAGER)
+    @JoinTable(
+            name="following",
+            joinColumns={@JoinColumn(name="user_id")},
+            inverseJoinColumns={@JoinColumn(name="following_id")}
+    )
+    @JsonIgnore
+    private Set<AppUser> following;
+
+    @ManyToMany(fetch=FetchType.EAGER)
+    @JoinTable(
+            name="followers",
+            joinColumns={@JoinColumn(name="user_id")},
+            inverseJoinColumns={@JoinColumn(name="follower_id")}
+    )
+    @JsonIgnore
+    private Set<AppUser> followers;
+
+    /* Securuty related */
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_authority_junc",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-
     private Set<Authority> authorities;
 
     private Boolean isVerified;
@@ -62,7 +90,31 @@ public class AppUser {
 
     public AppUser() {
         this.authorities = new HashSet<>();
+        this.following = new HashSet<>();
+        this.followers = new HashSet<>();
         this.isVerified = false;
     }
 
+    @Override
+    public String toString() {
+        return "AppUser{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", birthDate=" + birthDate +
+                ", bio='" + bio + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", profilePicture=" + profilePicture +
+                ", bannerPicture=" + bannerPicture +
+                ", following=" + following.size() +
+                ", followers=" + followers.size() +
+                ", authorities=" + authorities +
+                ", isVerified=" + isVerified +
+                ", verification=" + verification +
+                '}';
+    }
 }

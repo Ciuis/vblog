@@ -64,7 +64,3 @@ p {
 .reg-step-four-link:hover {
     text-decoration: underline;
 }
-
-.reg-step-four-check-group > p {
-    margin-right: 25px;
-}
