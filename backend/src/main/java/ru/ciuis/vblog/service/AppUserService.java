@@ -19,6 +19,10 @@ import ru.ciuis.vblog.model.RegistrationForm;
 import ru.ciuis.vblog.repository.AppUserRepository;
 import ru.ciuis.vblog.repository.AuthorityRepository;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -150,13 +154,62 @@ public class AppUserService implements UserDetailsService {
         AppUser user = userRepository.findByUsername(username).orElseThrow(UserNotExistException::new);
 
         Image image = imageService.uploadImage(file, prefix);
-
-        if (prefix.equals("pimg")) {
-            user.setProfilePicture(image);
-        } else {
-            user.setBannerPicture(image);
+        try {
+            if (prefix.equals("pimg")) {
+                if (user.getProfilePicture() != null && !user.getProfilePicture().getImageName().equals("defaultpimg.png")) {
+                    Path p = Paths.get(user.getProfilePicture().getImagePath());
+                    Files.deleteIfExists(p);
+                }
+                user.setProfilePicture(image);
+            } else {
+                if (user.getBannerPicture() != null && !user.getBannerPicture().getImageName().equals("defaultbnr.png")) {
+                    Path p = Paths.get(user.getBannerPicture().getImagePath());
+                    Files.deleteIfExists(p);
+                }
+                user.setBannerPicture(image);
+            }
+        } catch (IOException e) {
+            throw new UnableToSavePhotoException();
         }
 
+
         return userRepository.save(user);
+    }
+
+    public Set<AppUser> followUser(String user, String followee) throws FollowException {
+
+        if (user.equals(followee)) throw new FollowException();
+
+        AppUser loggedInUser = userRepository.findByUsername(user).orElseThrow(UserNotExistException::new);
+        Set<AppUser> followingList = loggedInUser.getFollowing();
+
+        AppUser followedUser = userRepository.findByUsername(followee).orElseThrow(UserNotExistException::new);
+        Set<AppUser> followersList = followedUser.getFollowers();
+
+        // add the user to the following list
+        followingList.add(followedUser);
+        loggedInUser.setFollowing(followingList);
+
+        // add the user to the follower list of the followee
+        followersList.add(loggedInUser);
+        followedUser.setFollowers(followersList);
+
+        // update users
+        userRepository.save(loggedInUser);
+        userRepository.save(followedUser);
+
+        return loggedInUser.getFollowing();
+    }
+
+    public Set<AppUser> retrieveFollowingList(String username) {
+        AppUser user = userRepository.findByUsername(username).orElseThrow(UserNotExistException::new);
+
+        return user.getFollowing();
+    }
+
+    public Set<AppUser> retrieveFollowersList(String username) {
+        AppUser user = userRepository.findByUsername(username).orElseThrow(UserNotExistException::new);
+
+        return user.getFollowers();
     }
 }

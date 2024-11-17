@@ -2,10 +2,8 @@ package ru.ciuis.vblog.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.Date;
 import java.util.HashSet;
@@ -15,7 +13,6 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
-@EqualsAndHashCode
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,0 +1,141 @@
+.register-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.register-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    width: 75%;
+}
+
+.register-header {
+    font-size: 31px;
+    font-weight: 600;
+    margin: 0;
+    margin-bottom: 30px;
+}
+
+.register-subheader {
+    font-size: 21px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.register-h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.register-header-2 {
+    font-size: 31px;
+    font-weight: 600;
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+.register-text {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.register-text-sm {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.register-link {
+    cursor: pointer;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+.register-error {
+    font-size: 13px;
+    font-weight: 300;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+/* Component specific styles */
+
+.register-one-birhdate-wrapper {
+    width: 100%;
+    height: fit-content;
+    margin-bottom: 15px;
+}
+
+.register-two-checkbox-wrapper {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.register-three-value-wrapper {
+    width: 100%;
+    margin-bottom: 25px;   
+}
+
+.register-three-bottom {
+    margin-bottom: 30px;
+}
+
+.register-four-input-wrapper {
+    width: 100%;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.register-four-input-wrapper-condensed {
+    margin-top: 25px;
+    margin-bottom: 0;
+}
+
+.register-four-checkbox-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.register-five-input-wrapper {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.register-five-message {
+    cursor: pointer;
+    font-size: 13px;
+    margin-left: 10px;
+    margin-top: 0;
+}
+
+.register-five-message:hover {
+    text-decoration: underline;
+}
+
+.register-six-password {
+    position: relative;
+    margin-bottom: 20px;
+    margin-top: 35px;
+}
+
+.register-six-icon {
+    position: absolute;
+    bottom: 2px;
+    right: 15px;
+    cursor: pointer;
+}

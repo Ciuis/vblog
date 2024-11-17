@@ -1,9 +1,9 @@
-import { RegisterFormFour } from "../components/RegisterFormFour/RegisterFormFour"
-import { RegisterFormOne } from "../components/RegisterFormOne/RegisterFormOne"
-import { RegisterFormThree } from "../components/RegisterFormThree/RegisterFormThree"
-import { RegisterFormTwo } from "../components/RegisterFormTwo/RegisterFormTwo"
-import { RegisterFormFive } from "../components/RegisterFormFive/RegisterFormFive"
-import { RegisterFormSix } from "../components/RegisterFormSIx/RegisterFormSix"
+import { RegisterFormFour } from "../components/RegisterForms/RegisterFormFour";
+import { RegisterFormOne } from "../components/RegisterForms/RegisterFormOne";
+import { RegisterFormThree } from "../components/RegisterForms/RegisterFormThree";
+import { RegisterFormTwo } from "../components/RegisterForms/RegisterFormTwo";
+import { RegisterFormFive } from "../components/RegisterForms/RegisterFormFive";
+import { RegisterFormSix } from "../components/RegisterForms/RegisterFormSix";
 
 import data from '../../../data/telcodes.json';
 
