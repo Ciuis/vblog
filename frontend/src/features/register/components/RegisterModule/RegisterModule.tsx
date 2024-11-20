@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../redux/Store';
 
-import { stepBackward } from '../../../../redux/Slices/RegisterSlice';
+import { cleanRegisterState, stepBackward } from '../../../../redux/Slices/RegisterSlice';
 import { Module } from '../../../../components/Module/Module';
 import { RegisterNavigator } from '../RegisterNavigator/RegisterNavigator';
 import { determineModuleContent } from '../../utils/RegisterModuleUtils';
@@ -10,14 +10,27 @@ import { RegisterNextButton } from '../RegisterNextButton/RegisterNextButton';
 
 import './RegisterModule.css';
 
-export const RegisterModule: React.FC = () => {
+interface RegisterModuleProperties {
+  toggleModule: () => void;
+}
+
+export const RegisterModule: React.FC<RegisterModuleProperties> = ({toggleModule}) => {
 
   const state = useSelector((state:RootState) => state.register);
   const dispatch:AppDispatch = useDispatch();
 
   const stepBtnOnClick = () => {
+    if (state.step === 1) {
+      toggleModule();
+    }
     dispatch(stepBackward());
   }
+
+  useEffect(() => {
+    return(() => {
+      dispatch(cleanRegisterState());
+    });
+  }, []);
 
   return (
     <Module 

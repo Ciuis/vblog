@@ -1,0 +1,26 @@
+.landing-footer {
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer-link {
+    font-size: 13px;
+    font-weight: 400;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.footer-link:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.footer-copyright {
+    font-size: 13px;
+    font-weight: 400;
+    margin-left: 15px;
+    margin-right: 15px;
+}

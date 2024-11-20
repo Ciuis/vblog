@@ -38,3 +38,11 @@ html, body, #root {
 .color-gray {
     color: #536471;
 }
+
+.link {
+    cursor: pointer;
+}
+
+.link:hover {
+    text-decoration: underline;
+}

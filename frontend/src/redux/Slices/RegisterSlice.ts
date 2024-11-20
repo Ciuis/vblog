@@ -176,6 +176,11 @@ export const RegisterSlice = createSlice({
                 state.step--;
                 return state;
             } 
+        },
+
+        cleanRegisterState(state) {
+            state = initialState;
+            return state;
         }
     },
 
@@ -327,6 +332,6 @@ export const RegisterSlice = createSlice({
     }
 });
 
-export const {updateRegister, stepForward, stepBackward} = RegisterSlice.actions;
+export const {updateRegister, stepForward, stepBackward, cleanRegisterState} = RegisterSlice.actions;
 
 export default RegisterSlice.reducer;

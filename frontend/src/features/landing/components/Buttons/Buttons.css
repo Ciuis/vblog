@@ -1,0 +1,77 @@
+.landing-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    border-radius: 20px;
+    padding: 12px;
+}
+
+.landing-button-logo {
+    height: 20px;
+    width: 20px;
+}
+
+.vkontakte-text {
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.vkontakte {
+    margin-bottom: 20px;
+    border: 1px solid gray;
+}
+
+.vkontakte:hover {
+    cursor: pointer;
+    border: 1px solid rgb(100, 156, 176);
+    background-color: rgba(100, 156, 176, .1);
+}
+
+.gosuslugi {
+    border: 1px solid gray;
+}
+
+.gosuslugi:hover {
+    cursor: pointer;
+    border: 1px solid rgb(87, 87, 87);
+    background-color: rgba(87, 87, 87, .1);
+}
+
+.gosuslugi-text {
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.sign-up {
+    background-color: #1d9bf0;
+    margin-bottom: 5px;
+}
+
+.sign-up:hover {
+    cursor: pointer;
+    background-color: #0e87d8;
+}
+
+.sign-up-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: white;
+    align-items: center;
+    text-align: center;
+}
+
+.sign-in {
+    border: 1px solid lightgray;
+}
+
+.sign-in:hover {
+    cursor: pointer;
+    background-color: rgba(29, 155, 240, .1);
+}
+
+.sign-in-text {
+    font-size: 16px;
+    font-weight: 600;
+}
