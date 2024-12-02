@@ -23,7 +23,7 @@ public class MailService {
         this.gmailService = gmailService;
     }
 
-    public void sendMail(String address, String subject, String content) throws Exception {
+    public void sendMail(String address, String subject, String content) throws EmailSendException {
         Properties properties = new Properties();
         Session session = Session.getInstance(properties, null);
         MimeMessage email = new MimeMessage(session);

@@ -1,0 +1,134 @@
+.navigation {
+    width: 100%;
+    height: 100%;
+    padding: 1px;
+}
+
+.navigation-logo-bg {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navigation-logo-bg:hover {
+    border-radius: 100%;
+    background-color: rgba(15, 20, 25, .1);
+}
+
+.navigation-logo {
+    width: 28px;
+    height: 28px;
+}
+
+.navigation-item {
+    width: 100%;
+}
+
+.navigation-link {
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.navigation-link:hover {
+    background-color: rgba(15, 20, 25, .1);
+    border-radius: 25px;
+}
+
+.navigation-text {
+    margin: 0;
+    padding: 0;
+    color: #14171a;
+    font-size: 18px;
+    font-weight: 500;
+    padding-top: 1px;
+    margin-left: 20px;
+}
+
+.navigation-active {
+    font-weight: 700;
+}
+
+.navigation-inactive {
+    font-weight: 400;
+}
+
+.navigation-post-button {
+    margin: 0;
+    padding: 12px;
+    color: #F5F8FA;
+    font-size: 17px;
+    font-weight: 600;
+    margin-left: 12px;
+    margin-top: 6px;
+    width: 235px;
+    border: none;
+    border-radius: 25px;
+    height: 50px;
+    background-color: rgb(29, 161, 242);
+    cursor: pointer;
+}
+
+.navigation-post-button:hover {
+    background-color: #1a81da;
+    cursor: pointer;
+}
+
+.navigation-options {
+    width: 100%;
+    height: 60px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 30px;
+    margin-top: 6px;
+    cursor: pointer;
+}
+
+.navigation-options:hover {
+    background-color: rgba(15, 20, 25, .1);
+    border-radius: 30px;
+}
+
+.navigation-options-pimg {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.navigation-options-info {
+    margin-left: 12px;
+    margin-right: 40px;
+}
+
+.navigation-options-info-display-name {
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+    color: #14171a;
+    font-weight: 800;
+}
+
+.navigation-options-info-handle {
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+    color: #657786;
+    font-weight: 400;
+}
+
+.navigation-options-dotdotdot {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #14171a;
+    font-weight: 800;
+}

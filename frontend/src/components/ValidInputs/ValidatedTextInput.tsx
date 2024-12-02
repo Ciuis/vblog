@@ -28,7 +28,7 @@ export const ValidatedTextInput:React.FC<ValidatedTextInputProperties> = ({valid
 
     const update = (e:React.ChangeEvent<HTMLInputElement>):void => {
         setValue(e.target.value);
-        console.log("send the info back to dispatcher");
+        //console.log("send the info back to dispatcher");
         changeValue(e);
     }
 

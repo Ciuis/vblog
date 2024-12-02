@@ -1,0 +1,47 @@
+.login-module-top {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 10px;
+}
+
+.login-module-top-left {
+    width: 33%;
+}
+
+.login-module-top-shadow {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 5px;
+    border-radius: 100%;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.login-module-top-shadow:hover {
+    z-index: 2;
+    background-color: rgba(0, 0, 0, .1);
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.login-module-top-middle {
+    width: 33%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-module-top-right {
+    width: 33%;
+}
+
+.login-module-top-logo {
+    width: 30px;
+    height: auto;
+}

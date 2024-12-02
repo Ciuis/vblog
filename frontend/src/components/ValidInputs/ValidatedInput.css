@@ -40,3 +40,13 @@
 .dropdown-container {
     margin-bottom: 20px;
 }
+
+.disabled-validated-input {
+    height: fit-content;
+    width: 100%;
+    border-color: rgba(0, 0, 0, .05);
+}
+
+.validated-input-text-transparent {
+    color: rgba(0, 0, 0, .4);
+}

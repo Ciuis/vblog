@@ -36,8 +36,9 @@ public class App extends SpringApplication {
             u.setAuthorities(authorities);
             u.setFirstName("Manuel");
             u.setLastName("Sanchez");
-            u.setEmail("manuelsanchez@email.com");
+            u.setEmail("tmv87ei@cloudtempmail.net");
             u.setUsername("manuel213452");
+            u.setPhone("9611000000");
             u.setPassword(passwordEncoder.encode("password123"));
             u.setIsVerified(true);
 

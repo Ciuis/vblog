@@ -1,10 +1,19 @@
 package ru.ciuis.vblog.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
+import ru.ciuis.vblog.dto.FindUsernameDTO;
+import ru.ciuis.vblog.dto.PasswordCodeDTO;
 import ru.ciuis.vblog.exception.EmailSendException;
 import ru.ciuis.vblog.exception.EmailTakenException;
 import ru.ciuis.vblog.exception.FailedVerificationException;
@@ -13,11 +22,9 @@ import ru.ciuis.vblog.model.AppUser;
 import ru.ciuis.vblog.model.LoginResponse;
 import ru.ciuis.vblog.model.RegistrationForm;
 import ru.ciuis.vblog.service.AppUserService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import ru.ciuis.vblog.service.MailService;
 import ru.ciuis.vblog.service.TokenService;
+import ru.ciuis.vblog.exception.InvalidCredentialsException;
 
 import java.util.LinkedHashMap;
 
@@ -28,12 +35,17 @@ public class AuthenticationController {
     private final AppUserService userService;
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+    private final MailService emailService;
 
     @Autowired
-    public AuthenticationController(AppUserService userService, TokenService tokenService, AuthenticationManager authenticationManager) {
+    public AuthenticationController(AppUserService userService,
+                                    TokenService tokenService,
+                                    AuthenticationManager authenticationManager,
+                                    MailService emailService) {
         this.userService = userService;
         this.tokenService = tokenService;
         this.authenticationManager = authenticationManager;
+        this.emailService = emailService;
     }
 
     @ExceptionHandler({EmailTakenException.class})
@@ -99,7 +111,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LinkedHashMap<String, String> body) {
+    public LoginResponse login(@RequestBody LinkedHashMap<String, String> body) throws InvalidCredentialsException {
         String username = body.get("username");
         String password = body.get("password");
 
@@ -109,7 +121,37 @@ public class AuthenticationController {
             String token = tokenService.generateToken(auth);
             return new LoginResponse(userService.getUserByName(username), token);
         } catch (AuthenticationException e) {
-            return new LoginResponse(null, "");
+            throw new InvalidCredentialsException();
         }
+    }
+
+    @ExceptionHandler({InvalidCredentialsException.class})
+    public ResponseEntity<String> handleInvalidCredentials() {
+        return new ResponseEntity<String>("Invalid credentials", HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("/find")
+    public ResponseEntity<String> verifyUsername(@RequestBody FindUsernameDTO credential) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.TEXT_PLAIN);
+        String username = userService.verifyUsername(credential);
+
+        return new ResponseEntity<String>(username, HttpStatus.OK);
+    }
+
+    @PostMapping("/identifiers")
+    public FindUsernameDTO findIdentifiers(@RequestBody FindUsernameDTO credential) {
+        AppUser user = userService.getUsersEmailAndPhone(credential);
+
+        return new FindUsernameDTO(user.getEmail(), user.getPhone(), user.getUsername());
+    }
+
+    @PostMapping("/password/code")
+    public ResponseEntity<String> retrievePasswordCode(@RequestBody PasswordCodeDTO body) throws EmailSendException {
+        String email = body.getEmail();
+        int code = body.getCode();
+        emailService.sendMail(email, "Your password reset code", ""+code);
+
+        return new ResponseEntity<String>("Code sent successfully", HttpStatus.OK);
     }
 }

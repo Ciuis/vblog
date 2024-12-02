@@ -20,6 +20,7 @@
     align-items: center;
     justify-content: center;
     background: url('../assets/left-side.jpeg');
+    background-size: cover;
 }
 
 .landing-top-left-logo {

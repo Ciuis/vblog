@@ -8,7 +8,7 @@ export const StyledInputBox = styled.div<StyledInputProperties>`
     border-radius: 5px;
     width: 100%;
     height: 56px;
-    border: ${(props) => determineStyledInputBorder(props)}
+    border: ${(props) => determineStyledInputBorder(props)};
 `;
 
 export const StyledInputLabel = styled.span<StyledInputProperties>`
@@ -18,7 +18,7 @@ export const StyledInputLabel = styled.span<StyledInputProperties>`
     width: 100%;
     margin: 0;
     padding: 0;
-    font-size: ${(props) => props.active ? '13px' : '18px'};
-    top: ${(props) => props.active ? '5px' : '16px'};
+    font-size: ${(props) => (props.active ? '13px' : '18px')};
+    top: ${(props) => (props.active ? '5px' : '16px')};
     color: ${(props) => determineLabelColor(props)};
 `;

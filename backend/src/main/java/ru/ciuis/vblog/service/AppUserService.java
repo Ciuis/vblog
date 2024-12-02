@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ru.ciuis.vblog.dto.FindUsernameDTO;
 import ru.ciuis.vblog.exception.*;
 import ru.ciuis.vblog.model.AppUser;
 import ru.ciuis.vblog.model.Authority;
@@ -211,5 +212,17 @@ public class AppUserService implements UserDetailsService {
         AppUser user = userRepository.findByUsername(username).orElseThrow(UserNotExistException::new);
 
         return user.getFollowers();
+    }
+
+    public String verifyUsername(FindUsernameDTO credential) {
+        AppUser user = userRepository.findByEmailOrPhoneOrUsername(credential.getEmail(), credential.getPhone(), credential.getUsername())
+                .orElseThrow(UserNotExistException::new);
+
+        return user.getUsername();
+    }
+
+    public AppUser getUsersEmailAndPhone(FindUsernameDTO credential) {
+        return userRepository.findByEmailOrPhoneOrUsername(credential.getEmail(), credential.getPhone(), credential.getUsername())
+                .orElseThrow(UserNotExistException::new);
     }
 }

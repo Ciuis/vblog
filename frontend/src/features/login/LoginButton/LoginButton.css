@@ -1,0 +1,10 @@
+.login-button {
+    width: 75%;
+    height: fit-content;
+}
+
+.login-button-text {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 25px;
+}

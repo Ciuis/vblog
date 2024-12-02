@@ -1,0 +1,54 @@
+.forgot-form-container {
+    width: 75%;
+    height: 100%;
+}
+
+.forgot-form-header {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 31px;
+    font-weight: 600;
+}
+
+.forgot-form-text {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 300;
+    margin-bottom: 25px;
+}
+
+.forgot-error {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 300;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+.forgot-form-two-select-group {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: fit-content;
+    margin-bottom: 10px;
+}
+
+.forgot-form-two-select-text {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.forgot-form-four-password-wrapper {
+    width: 100%;
+    position: relative;
+    margin-top: 25px;
+}
+
+.forgot-form-four-password-icon {
+    position: absolute;
+    bottom: 2px;
+    right: 15px;
+    cursor: pointer;
+}
