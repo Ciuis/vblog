@@ -1,6 +1,6 @@
-simple instrtuction:
+simple instrtuction:\n
 
-1. prepare backend: 
+1. prepare backend: \n
   1.1. create postgres database 'vblogdb' (or another db name, but don't forget to change application.properties)
   1.2. run backend spring app to run server at localhost:8000
 3. open 'frontend' with console 
