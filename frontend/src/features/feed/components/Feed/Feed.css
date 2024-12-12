@@ -1,0 +1,6 @@
+.feed {
+    width: 100%;
+    height: 100%;
+    border-left: 1px solid rgba(170, 184, 197, .25);
+    border-right: 1px solid rgba(170, 184, 197, .25);
+}
