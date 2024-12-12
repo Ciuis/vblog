@@ -3,13 +3,15 @@ import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../redux/Store";
-import { setToken } from "../redux/Slices/UserSlice";
+import { setToken, getUserByToken } from "../redux/Slices/UserSlice";
 
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 import { Navigation } from "../components/Navigation/Navigation";
+import { Feed } from "../features/feed/components/Feed/Feed";
 
 import './Home.css';
+
 
 export const Home:React.FC = () => {
 
@@ -21,22 +23,20 @@ export const Home:React.FC = () => {
     const [jwt, setJwt, removeJwt] = useLocalStorage("token", "");
 
     useEffect(() => {
-        if (jwt === '' && state.token !== '') {
-            //console.log("There is no tokens in local storage but there is one in state");
-            //console.log("that means the user just logged in, store token in local storeage");
+        if (jwt !== '' && state.token !== '') {
+            dispatch(
+                getUserByToken(state.token)
+            );
+        } else if (jwt === '' && state.token !== '') {
             setJwt(state.token);
         } else if (jwt !== '' && state.token === '') {
-            //console.log("User returned to website and logged in");
-            //console.log("need to store the token in the userSlice");
             dispatch(
                 setToken(jwt)
             );
         } else {
-            //console.log("User is not logged in");
-            //console.log("navigate to the login page");
             navigate("/");
         }
-    }, []);
+    }, [state.token]);
 
     return (
         <div className="home">
@@ -45,7 +45,7 @@ export const Home:React.FC = () => {
                     <Navigation/>
                 </div>
                 <div className="home-content-section">
-
+                    <Feed />
                 </div>
                 <div className="home-info-section">
 

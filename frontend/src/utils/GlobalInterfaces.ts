@@ -83,3 +83,26 @@ export interface SVGProperties {
     width: number;
     color?: string;
 }
+
+export interface PostImage {
+    imageId: number;
+    imageName: string;
+    imageType: string;
+    imageUrl: string;
+}
+
+export interface Post {
+    postId: number;
+    content: string;
+    postedDate?: Date;
+    author: User;
+    replies?: Post[];
+    likes: number;
+    images: PostImage[];
+    reposts: number;
+    views: number;
+    scheduled: boolean;
+    scheduledDate?: Date;
+    audience: 'EVERYONE' | 'CIRCLE';
+    replyRestriction: 'EVERYONE' | 'CIRCLE' | 'MENTION';
+}

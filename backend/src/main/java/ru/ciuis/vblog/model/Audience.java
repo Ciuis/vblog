@@ -1,2 +1,5 @@
-package ru.ciuis.vblog.model;public enum Audience {
+package ru.ciuis.vblog.model;
+
+public enum Audience {
+    EVERYONE, CIRCLE
 }

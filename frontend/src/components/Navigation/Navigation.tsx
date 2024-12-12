@@ -1,5 +1,8 @@
 import React from "react";
+import { useSelector, UseSelector } from "react-redux";
 import { Link } from "react-router-dom";
+
+import { RootState } from "../../redux/Store";
 
 import './Navigation.css';
 
@@ -15,6 +18,9 @@ import ProfileSVG from "../SVGs/ProfileSVG";
 import MoreSVG from "../SVGs/MoreSVG";
 
 export const Navigation:React.FC = () => {
+
+    const state = useSelector((state:RootState) => state.user);
+
     return (
         <div className="navigation">
             <nav className="navigation-container">
@@ -83,10 +89,10 @@ export const Navigation:React.FC = () => {
                 <img className="navigation-options-pimg" src="https://christopherscottedwards.com/wp-content/uploads/2018/07/Generic-Profile.jpg"/>
                 <div className="navigation-options-info">
                     <p className="navigation-options-info-display-name">
-                        manuel213452
+                        {state.loggedIn && state.loggedIn?.nickname ? state.loggedIn.nickname : state.username}
                     </p>
                     <p className="navigation-options-info-handle">
-                        @manuel213452
+                        @{state.username ? state.username : ""}
                     </p>
                 </div>
                 <p className="navigation-options-dotdotdot">...</p>

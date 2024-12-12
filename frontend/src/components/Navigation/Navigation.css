@@ -104,24 +104,36 @@
 }
 
 .navigation-options-info {
+    width: 150px;
     margin-left: 12px;
-    margin-right: 40px;
+    margin-right: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .navigation-options-info-display-name {
+    width: 140px;
     margin: 0;
     padding: 0;
     font-size: 15px;
     color: #14171a;
     font-weight: 800;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .navigation-options-info-handle {
+    width: 140px;
     margin: 0;
     padding: 0;
     font-size: 15px;
     color: #657786;
     font-weight: 400;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .navigation-options-dotdotdot {

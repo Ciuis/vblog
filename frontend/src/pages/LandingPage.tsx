@@ -1,8 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/Store';
 import { resetUsername } from '../redux/Slices/UserSlice';
+
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 import RegisterModule from '../features/register';
 import { RightSideBar, LandingFooter } from '../features/landing';
@@ -21,6 +24,9 @@ export const LandingPage:React.FC = () => {
   const [login, setLogin] = useState<boolean>(false);
   const [forgotPassword, setForgotPassword] = useState<boolean>(false);
 
+  const [jwt, setJwt, removeJwt] = useLocalStorage("token", "");
+  const navigate = useNavigate();
+
   const toggleRegister = () => {
     setRegister(!register);
   }
@@ -34,6 +40,10 @@ export const LandingPage:React.FC = () => {
     setLogin(false);
     setForgotPassword(!forgotPassword);
   }
+
+  useEffect(() => {
+    if (jwt !== '') navigate("/home");
+  }, [jwt]);
 
   return (
     <div className="home-container bg-color">
