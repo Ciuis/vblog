@@ -1,0 +1,56 @@
+.feed-post-creator-edit-image-modal-top {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.feed-post-creator-edit-image-modal-top-left {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.feed-post-creator-edit-image-modal-top-back {
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.feed-post-creator-edit-image-modal-top-back:hover {
+    background-color: rgba(0, 0, 0, .15);
+    cursor: pointer;
+}
+
+.feed-post-creator-edit-image-modal-top-text {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: Ubuntu, sans-serif;
+}
+
+.feed-post-creator-edit-image-modal-save {
+    width: 100px;
+    height: 30px;
+    border-radius: 15px;
+    border: none;
+    background-color: black;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.feed-post-creator-edit-image-modal-save:hover {
+    background-color: rgba(0, 0, 0, .75);
+    cursor: pointer;
+}

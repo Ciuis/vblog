@@ -1,14 +1,16 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import axios from "axios";
+import FormData from 'form-data';
 
 import { Post, User } from "../../utils/GlobalInterfaces";
 
-interface PostSliceState {
+export interface PostSliceState {
     loading: boolean;
     error: boolean;
     currentPost: Post | undefined;
     posts: Post[];
+    currentPostImages: File[];
 }
 
 interface UpdatePostPayload {
@@ -23,15 +25,20 @@ interface CreatePostBody {
     scheduled: boolean;
     scheduledDate: Date | undefined;
     audience: 'EVERYONE' | 'CIRCLE';
-    replyRestriction: 'EVERYONE' | 'CIRCLE' | 'MENTION';
+    replyRestriction: 'EVERYONE' | 'FOLLOW' | 'CIRCLE' | 'MENTION';
     token: string;
+}
+
+interface CreatePostWithMeidaBody extends CreatePostBody{
+    images: File[]
 }
 
 const initialState: PostSliceState = {
     loading: false,
     error: false,
     currentPost: undefined,
-    posts: []
+    posts: [],
+    currentPostImages: []
 }
 
 export const createPost = createAsyncThunk(
@@ -57,6 +64,50 @@ export const createPost = createAsyncThunk(
             return request.data;
 
         } catch(e) {
+            thunkAPI.rejectWithValue(e);
+        }
+    }
+)
+
+export const createPostWithMedia = createAsyncThunk(
+    'post/create-media',
+    async (body:CreatePostWithMeidaBody, thunkAPI) => {
+        try {
+            const images = body.images;
+
+            let data = new FormData();
+
+            let post = {
+                content: body.content,
+                author: body.author,
+                replies: body.replies,
+                scheduled: body.scheduled,
+                scheduledDate: body.scheduledDate,
+                audience: body.audience,
+                replyRestriction: body.replyRestriction
+            }
+
+            data.append('post', JSON.stringify(post));
+
+            images.forEach((image) => {
+                data.append('media', image);
+            });
+
+            let config = {
+                method: 'post',
+                url: 'http://localhost:8000/posts/media',
+                headers: {
+                    'Authorization': `Bearer: ${body.token}`,
+                    'Content-Type': 'multipart/form-data'
+                },
+                data
+            }
+
+            let result = await axios(config);
+
+            return result.data;
+
+        } catch (e) {
             thunkAPI.rejectWithValue(e);
         }
     }
@@ -88,11 +139,29 @@ export const PostSlice = createSlice({
             }
 
             return state;
+        },
+
+        updateCurrentPostImages(state, action:PayloadAction<File[]>) {
+            state = {
+                ...state,
+                currentPostImages: action.payload
+            }
+
+            return state;
         }
     },
 
     extraReducers: (builder) => {
         builder.addCase(createPost.pending, (state, action) => {
+            state = {
+                ...state,
+                loading: true
+            }
+
+            return state;
+        });
+
+        builder.addCase(createPostWithMedia.pending, (state, action) => {
             state = {
                 ...state,
                 loading: true
@@ -115,7 +184,31 @@ export const PostSlice = createSlice({
             return state;
         });
 
+        builder.addCase(createPostWithMedia.fulfilled, (state, action) => {
+            let post:Post = action.payload;
+            
+            state = {
+                ...state,
+                posts: [post, ...state.posts],
+                loading: false,
+                error: false,
+                currentPost: undefined,
+                currentPostImages: []
+            }
+
+            return state;
+        });
+
         builder.addCase(createPost.rejected, (state, action) => {
+            state = {
+                ...state,
+                error: true
+            }
+
+            return state;
+        });
+
+        builder.addCase(createPostWithMedia.rejected, (state, action) => {
             state = {
                 ...state,
                 error: true
@@ -126,6 +219,6 @@ export const PostSlice = createSlice({
     }
 });
 
-export const {initializeCurrentPost, updateCurrentPost} = PostSlice.actions;
+export const {initializeCurrentPost, updateCurrentPost, updateCurrentPostImages} = PostSlice.actions;
 
 export default PostSlice.reducer;

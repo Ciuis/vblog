@@ -3,17 +3,17 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AppDispatch, RootState } from "../../../../redux/Store";
-import { createPost, initializeCurrentPost, updateCurrentPost } from "../../../../redux/Slices/PostSlice";
+import { createPost, createPostWithMedia, initializeCurrentPost, updateCurrentPost, updateCurrentPostImages } from "../../../../redux/Slices/PostSlice";
 
 import { Post } from "../../../../utils/GlobalInterfaces";
 
-import { ExpandMore } from "@mui/icons-material";
-
 import { FeedPostCreatorProgress } from "../FeedPostCreatorProgress/FeedPostCreatorProgress";
+import { FeedPostAudienceDropDown } from "../FeedPostAudienceDropDown/FeedPostAudienceDropDown";
+import { FeedPostReplyRestrictionDropDown } from "../FeedPostReplyRestrictionDropDown/FeedPostReplyRestrictionDropDown";
+import { FeedPostCreatorImages } from "../FeedPostCreatorImages/FeedPostCreatorImages";
 
 import './FeedPostCreator.css';
 
-import GlobeSVG from '../../../../components/SVGs/GlobeSVG';
 import MediaSVG from "../../../../components/SVGs/MediaSVG";
 import GIFSVG from "../../../../components/SVGs/GIFSVG";
 import PollSVG from "../../../../components/SVGs/PollSVG";
@@ -27,8 +27,11 @@ export const FeedPostCreator:React.FC = () => {
     const dispatch:AppDispatch = useDispatch();
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const imageSelectorRef = useRef<HTMLInputElement>(null);
+
     const [active, setActive] = useState<boolean>(false);
     const [postContent, setPostContent] = useState<string>('');
+    const [overloadedImages, setOverloadedImages] = useState<boolean>(false);
 
     const activate = () => {
         if (!active) {
@@ -70,26 +73,89 @@ export const FeedPostCreator:React.FC = () => {
 
     const submitPost = () => {
         if (state.post.currentPost && state.user.loggedIn) {
-            let body = {
-                content: state.post.currentPost.content,
-                author: state.post.currentPost.author,
-                replies: [],
-                scheduled: state.post.currentPost.scheduled,
-                scheduledDate: state.post.currentPost.scheduledDate,
-                audience: state.post.currentPost.audience,
-                replyRestriction: state.post.currentPost.replyRestriction,
-                token: state.user.token
-            }
+            if (state.post.currentPostImages.length === 0) {
+                let body = {
+                    content: state.post.currentPost.content,
+                    author: state.post.currentPost.author,
+                    replies: [],
+                    scheduled: state.post.currentPost.scheduled,
+                    scheduledDate: state.post.currentPost.scheduledDate,
+                    audience: state.post.currentPost.audience,
+                    replyRestriction: state.post.currentPost.replyRestriction,
+                    token: state.user.token
+                }
+    
+                dispatch(createPost(body));
+            } else {
+                let body = {
+                    content: state.post.currentPost.content,
+                    author: state.post.currentPost.author,
+                    replies: [],
+                    scheduled: state.post.currentPost.scheduled,
+                    scheduledDate: state.post.currentPost.scheduledDate,
+                    audience: state.post.currentPost.audience,
+                    replyRestriction: state.post.currentPost.replyRestriction,
+                    token: state.user.token,
+                    images: state.post.currentPostImages
+                }
 
-            dispatch(createPost(body));
+                dispatch(createPostWithMedia(body));
+            }
         }
 
         setActive(false);
+        setPostContent("");
 
         if (textAreaRef && textAreaRef.current) {
             textAreaRef.current.blur();
             textAreaRef.current.value = "";
         }
+    }
+
+    const handleGetImages = (e:React.ChangeEvent<HTMLInputElement>) => {
+        const imageList = state.post.currentPostImages;
+        setOverloadedImages(false);
+
+        if (imageSelectorRef.current && e.target.files) {
+            if (e.target.files.length + imageList.length > 4) {
+                console.log("Selected too many files");
+                imageSelectorRef.current.value = '';
+                setOverloadedImages(true);
+                return;
+            }
+
+            if (imageList[0]?.type === 'image/gif') {
+                console.log("only one gif or another images allowed");
+                imageSelectorRef.current.value = '';
+                setOverloadedImages(true);
+                return;
+            }
+
+            let fileArray:File[] = [...imageList];
+
+            for (let i = 0; i < e.target.files.length; ++i) {
+                let file = e.target.files.item(i);
+
+                if ((file?.type === 'image/gif' && imageList.length >= 1) || (file?.type === 'image/gif' && e.target.files.length > 1)) {
+                    console.log("only one gif and no other images allowed");
+                    imageSelectorRef.current.value = '';
+                    setOverloadedImages(true);
+                    return;
+                }
+
+                if (file) fileArray.push(file);
+            }
+
+            dispatch(updateCurrentPostImages(fileArray));
+        }
+    }
+
+    const determineFull = ():boolean => {
+        if (state.post.currentPostImages.length === 4) return true;
+
+        if (state.post.currentPostImages[0]?.type === 'image/gif') return true;
+
+        return false;
     }
 
     useEffect(() => {
@@ -104,13 +170,7 @@ export const FeedPostCreator:React.FC = () => {
                 <img className="feed-post-creator-pimg" src="https://christopherscottedwards.com/wp-content/uploads/2018/07/Generic-Profile.jpg" />
             </Link>
             <div className="feed-post-creator-right">
-                <div className={active ? "feed-post-creator-audience" : "feed-post-creator-audience hide"}>
-                    Для всех
-                    <ExpandMore sx={{
-                        fontSize: '22px'
-                    }}
-                    />
-                </div>
+                {active ? <FeedPostAudienceDropDown /> : <></>}
                 <textarea 
                     className={active ? "feed-post-creator-input input-active" : "feed-post-creator-input"}
                     placeholder="Что происходит?!"
@@ -119,25 +179,26 @@ export const FeedPostCreator:React.FC = () => {
                     cols={40}
                     maxLength={256}
                 />
-                <div className={active ? "feed-post-creator-reply" : "feed-post-creator-reply hide"}>
-                    <GlobeSVG height={14} width={14} color={"#1DA1F2"} />
-                    Все могут отвечать
-                </div>
+                {state.post.currentPostImages.length > 0 && <FeedPostCreatorImages />}
+                {active ? <FeedPostReplyRestrictionDropDown /> : <></>}
                 <div className={active ? "feed-post-creator-bottom-icons icons-active" : "feed-post-creator-bottom-icons"}>
                     <div className="feed-post-creator-icons-left">
-                        <div className="feed-post-creator-icon-bg">
-                            <MediaSVG height={20} width={20} color={"#1DA1F2"} />
+                        <div className="feed-post-creator-icon-bg-media">
+                            <input className="feed-post-creator-file-update" onChange={handleGetImages} type="file" id="images" accept="image/*" multiple={true} ref={imageSelectorRef} hidden disabled={determineFull()} />
+                            <label htmlFor="images" className={determineFull() ? "feed-post-creator-icon-bg" : "feed-post-creator-icon-bg icon-active"}>
+                                <MediaSVG height={20} width={20} color={determineFull() ? "rgba(19,161,242,.5": "#1DA1F2"} />
+                            </label>
                         </div>
-                        <div className="feed-post-creator-icon-bg">
-                            <GIFSVG height={20} width={20} color={"#1DA1F2"} />
+                        <div className={state.post.currentPostImages.length > 0 ? "feed-post-creator-icon-bg" : "feed-post-creator-icon-bg icon-active"}>
+                            <GIFSVG height={20} width={20} color={state.post.currentPostImages.length > 0 ? "rgba(19,161,242,.5": "#1DA1F2"} />
                         </div>
-                        <div className="feed-post-creator-icon-bg">
-                            <PollSVG height={20} width={20} color={"#1DA1F2"} />
+                        <div className={state.post.currentPostImages.length > 0 ? "feed-post-creator-icon-bg" : "feed-post-creator-icon-bg icon-active"}>
+                            <PollSVG height={20} width={20} color={state.post.currentPostImages.length > 0 ? "rgba(19,161,242,.5": "#1DA1F2"} />
                         </div>
-                        <div className="feed-post-creator-icon-bg">
+                        <div className="feed-post-creator-icon-bg icon-active">
                             <EmojiSVG height={20} width={20} color={"#1DA1F2"} />
                         </div>
-                        <div className="feed-post-creator-icon-bg">
+                        <div className="feed-post-creator-icon-bg icon-active">
                             <ScheduleSVG height={20} width={20} color={"#1DA1F2"} />
                         </div>
                         <div className="feed-post-creator-location">
@@ -157,7 +218,9 @@ export const FeedPostCreator:React.FC = () => {
                             <></>
                         }
                         <button 
-                            className={postContent === '' ? "feed-post-creator-post-button" : "feed-post-creator-post-button post-active"} disabled={postContent === ''} onClick={submitPost}>
+                            className={postContent === '' && state.post.currentPostImages.length < 1 ? "feed-post-creator-post-button" : "feed-post-creator-post-button post-active"} 
+                            disabled={postContent === '' && state.post.currentPostImages.length < 1} 
+                            onClick={submitPost}>
                                 Опубликовать
                         </button>
                     </div>

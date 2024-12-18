@@ -1,0 +1,115 @@
+.feed-post-reply-restriction-drop-down {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+}
+
+.feed-post-reply-restriction-drop-down-button {
+    width: fit-content;
+    height: 24px;
+    padding: 2px 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: #1DA1F2;
+    font-weight: 600;
+}
+
+.feed-post-reply-restriction-drop-down-button:hover {
+    border-radius: 75px;
+    background-color: rgba(29, 161, 242, .1);
+    cursor: pointer;
+}
+
+.feed-post-reply-restriction-drop-down-button-disabled {
+    width: fit-content;
+    height: 24px;
+    padding: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: rgba(29, 161, 242, .5);
+    font-weight: 600;
+    cursor: default;
+}
+
+.feed-post-reply-restriction-drop-down-modal {
+    width: 320px;
+    height: 290px;
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    box-shadow: rgba(100, 100, 111, .2) 0px 7px 29px 0px;
+    border-radius: 16px;
+    z-index: 50;
+    overflow: hidden;
+}
+
+.feed-post-reply-restriction-drop-down-title {
+    color: black;
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 12px;
+    margin-left: 12px;
+    margin-bottom: 4px;
+}
+
+.feed-post-reply-restriction-drop-down-sub-title {
+    color: #536471;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 12px;
+    margin-bottom: 2px;
+}
+
+.feed-post-reply-restriction-drop-down-choice {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: black;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+.feed-post-reply-restriction-drop-down-choice:hover {
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+
+.feed-post-reply-restriction-drop-down-choice-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;    
+}
+
+.feed-post-reply-restrinction-drop-down-choice-bg {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    background-color: #1DA1F2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.feed-post-reply-restriction-drop-down-choice-text {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
