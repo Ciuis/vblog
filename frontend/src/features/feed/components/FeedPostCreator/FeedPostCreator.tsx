@@ -20,6 +20,7 @@ import PollSVG from "../../../../components/SVGs/PollSVG";
 import EmojiSVG from "../../../../components/SVGs/EmojiSVG";
 import ScheduleSVG from "../../../../components/SVGs/ScheduleSVG";
 import LocationSVG from "../../../../components/SVGs/LocationSVG";
+import { updateDisplayGif } from "../../../../redux/Slices/ModalSlice";
 
 export const FeedPostCreator:React.FC = () => {
 
@@ -158,6 +159,10 @@ export const FeedPostCreator:React.FC = () => {
         return false;
     }
 
+    const displayGif = () => {
+        dispatch(updateDisplayGif());
+    }
+
     useEffect(() => {
         if (!state.post.currentPost) {
             setPostContent("");
@@ -189,7 +194,7 @@ export const FeedPostCreator:React.FC = () => {
                                 <MediaSVG height={20} width={20} color={determineFull() ? "rgba(19,161,242,.5": "#1DA1F2"} />
                             </label>
                         </div>
-                        <div className={state.post.currentPostImages.length > 0 ? "feed-post-creator-icon-bg" : "feed-post-creator-icon-bg icon-active"}>
+                        <div className={state.post.currentPostImages.length > 0 ? "feed-post-creator-icon-bg" : "feed-post-creator-icon-bg icon-active"} onClick={displayGif}>
                             <GIFSVG height={20} width={20} color={state.post.currentPostImages.length > 0 ? "rgba(19,161,242,.5": "#1DA1F2"} />
                         </div>
                         <div className={state.post.currentPostImages.length > 0 ? "feed-post-creator-icon-bg" : "feed-post-creator-icon-bg icon-active"}>

@@ -106,3 +106,10 @@ export interface Post {
     audience: 'EVERYONE' | 'CIRCLE';
     replyRestriction: 'EVERYONE' | 'FOLLOW' | 'CIRCLE' | 'MENTION';
 }
+
+export interface TenorCategories {
+    image: string;
+    name: string;
+    path: string;
+    searchterm: string;
+}

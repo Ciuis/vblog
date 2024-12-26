@@ -1,0 +1,34 @@
+.feed-post-creator-gif-modal-display {
+    width: 100%;
+    height: 100%;
+}
+
+.feed-post-creator-gif-modal-display-auto-selection {
+    height: 50px;
+    width: 100%;
+    padding: 0 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.feed-post-creator-gif-modal-display-auto-text {
+    font-size: 15px;
+    font-weight: 400;
+    color: #536471;
+}
+
+.feed-post-creator-gif-modal-display-gif-container {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    row-gap: 2px;
+}
+
+.feed-post-creator-gif-modal-display-gif {
+    width: 24.5%;
+    height: 135px;
+}

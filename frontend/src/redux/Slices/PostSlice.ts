@@ -30,7 +30,7 @@ interface CreatePostBody {
 }
 
 interface CreatePostWithMeidaBody extends CreatePostBody{
-    images: File[]
+    images: File[];
 }
 
 const initialState: PostSliceState = {
@@ -97,7 +97,7 @@ export const createPostWithMedia = createAsyncThunk(
                 method: 'post',
                 url: 'http://localhost:8000/posts/media',
                 headers: {
-                    'Authorization': `Bearer: ${body.token}`,
+                    'Authorization': `Bearer ${body.token}`,
                     'Content-Type': 'multipart/form-data'
                 },
                 data
