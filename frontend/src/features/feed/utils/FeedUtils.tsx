@@ -1,3 +1,5 @@
+import { MouseEventHandler } from "react";
+
 import { PostSliceState } from "../../../redux/Slices/PostSlice";
 
 import { FeedPostCreatorImage } from "../components/FeedPostCreatorImage/FeedPostCreatorImage";
@@ -6,6 +8,8 @@ import GlobeSVG from "../../../components/SVGs/GlobeSVG";
 import PeopleYouFollowSVG from "../../../components/SVGs/PeopleYouFollowSVG";
 import LockSVG from "../../../components/SVGs/LockSVG";
 import MentionedSVG from "../../../components/SVGs/MentionedSVG";
+import TagPeopleSVG from "../../../components/SVGs/TagPeopleSVG";
+
 
 export function getReplyDropDownButton(state:PostSliceState, callback:()=>void):JSX.Element {
 
@@ -49,7 +53,7 @@ export function createImageContainer(images:File[]):JSX.Element {
             <div className="feed-post-creator-images-container container-even">
                 {images.map((image) => {
                     const url = window.URL.createObjectURL(image);
-                    return <FeedPostCreatorImage image={url} name={image.name} key={url} />
+                    return <FeedPostCreatorImage image={url} name={image.name} type={image.type} key={url} />
                 })}
             </div>
         )
@@ -64,7 +68,7 @@ export function createImageContainer(images:File[]):JSX.Element {
             <div className="feed-post-creator-images-container container-odd">
                 {reversed.map((image) => {
                     const url = window.URL.createObjectURL(image);
-                    return <FeedPostCreatorImage image={url} name={image.name} key={url} />
+                    return <FeedPostCreatorImage image={url} name={image.name} type={image.type} key={url} />
                 })}
             </div>
         )
@@ -72,7 +76,28 @@ export function createImageContainer(images:File[]):JSX.Element {
 
     return (
         <div className="feed-post-creator-images-container container-odd">
-            <FeedPostCreatorImage image={window.URL.createObjectURL(images[0])} name={images[0].name} />
+            <FeedPostCreatorImage image={window.URL.createObjectURL(images[0])} name={images[0].name} type={images[0].type} />
         </div>
+    )
+}
+
+export function displayTagPeople(state:PostSliceState, toggleTagPeopleModal:MouseEventHandler<HTMLParagraphElement>):JSX.Element {
+    if (state.currentPost && state.currentPost.images.length > 0) {
+        return (
+            <div className="feed-post-creator-images-option">
+                via Tenor
+            </div>
+        )
+    }
+
+    if (state.currentPostImages[0].type === 'image/gif') {
+        return <></>
+    }
+
+    return (
+        <p className="feed-post-creator-images-option" onClick={toggleTagPeopleModal}>
+            <TagPeopleSVG width={16} height={16} color={"#536471"} />
+                Отметить человека
+        </p>
     )
 }

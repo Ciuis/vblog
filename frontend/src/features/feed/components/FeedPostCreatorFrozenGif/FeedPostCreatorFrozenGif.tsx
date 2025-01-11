@@ -4,6 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { AppDispatch, RootState } from "../../../../redux/Store";
 import { fetchGifsByTerm } from "../../../../redux/Slices/GifSlice";
+import { updateCurrentPost } from "../../../../redux/Slices/PostSlice";
+import { updateDisplayGif } from "../../../../redux/Slices/ModalSlice";
+
+import { PostImage } from "../../../../utils/GlobalInterfaces";
 
 interface FeedPostCreatorFrozenGifProperties {
     image: string;
@@ -20,8 +24,16 @@ export const FeedPostCreatorFrozenGif:React.FC<FeedPostCreatorFrozenGifPropertie
 
     const freezeGif = () => {
         if (canvasRef && canvasRef.current && imageRef && imageRef.current) {
-            let width = 290;
-            let height = 150;
+            let width;
+            let height;
+
+            if (preview) {
+                width = 290;
+                height = 150;
+            } else {
+                width = 143;
+                height = 135;
+            }
 
             canvasRef.current.width = width;
             canvasRef.current.height = height;
@@ -35,18 +47,39 @@ export const FeedPostCreatorFrozenGif:React.FC<FeedPostCreatorFrozenGifPropertie
                 context.drawImage(imageRef.current, 0, 0, width, height);
                 context.fillText(text, (12), (138));
             }
+
+            if (context !== null && !preview) {
+                context.drawImage(imageRef.current, 0, 0 , width, height);
+            }
         }
     }
 
-    const handleCanvasClicked = () => {
-        //TODO: 
-        if (preview) dispatch(fetchGifsByTerm(text));
+    const handleCanvasClicked = () => { 
+        if (preview) {
+            dispatch(fetchGifsByTerm(text));
+        } else {
+            let postImage:PostImage = {
+                imageId: 0,
+                imageName: `${text}-gif`,
+                imageType: 'gif',
+                imageUrl: image
+            };
+
+            let imgs = [postImage];
+
+            dispatch(updateCurrentPost({
+                name: 'images',
+                value: imgs
+            }));
+
+            dispatch(updateDisplayGif());
+        }
     }
 
     return (
         <>
             <img src={image} ref={imageRef} onLoad={freezeGif} hidden/>
-            {preview && <canvas ref={canvasRef} onClick={handleCanvasClicked}></canvas>}
+            <canvas ref={canvasRef} onClick={handleCanvasClicked}></canvas>
         </>
     )
 }

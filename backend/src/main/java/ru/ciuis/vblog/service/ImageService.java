@@ -27,6 +27,10 @@ public class ImageService {
         this.imageRepository = imageRepository;
     }
 
+    public Image saveGifFromPost(Image image) {
+        return imageRepository.save(image);
+    }
+
     public Image uploadImage(MultipartFile file, String prefix) throws UnableToSavePhotoException {
         try {
             //Type of content

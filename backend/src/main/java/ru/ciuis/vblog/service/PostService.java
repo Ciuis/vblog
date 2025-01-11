@@ -29,6 +29,19 @@ public class PostService {
     }
 
     public Post createPost(CreatePostDTO dto) {
+        Image savedGif;
+
+        if (!dto.getImages().isEmpty()) {
+            List<Image> gifList = dto.getImages();
+            Image gif = gifList.getFirst();
+            gif.setImagePath(gif.getImageURL());
+
+            savedGif = imageService.saveGifFromPost(gif);
+            gifList.removeFirst();
+            gifList.add(savedGif);
+            dto.setImages(gifList);
+        }
+
         Post p = new Post();
         p.setContent(dto.getContent());
         if (dto.getScheduled()) {
@@ -42,6 +55,7 @@ public class PostService {
         p.setScheduledDate(dto.getScheduledDate());
         p.setAudience(dto.getAudience());
         p.setReplyRestriction(dto.getReplyRestriction());
+        p.setImages(dto.getImages());
 
         try {
             return postRepository.save(p);

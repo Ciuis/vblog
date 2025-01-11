@@ -3,7 +3,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import FormData from 'form-data';
 
-import { Post, User } from "../../utils/GlobalInterfaces";
+import { Post, PostImage, User } from "../../utils/GlobalInterfaces";
 
 export interface PostSliceState {
     loading: boolean;
@@ -15,12 +15,13 @@ export interface PostSliceState {
 
 interface UpdatePostPayload {
     name: string;
-    value: string | number | boolean;
+    value: string | number | boolean | PostImage[];
 }
 
 interface CreatePostBody {
     content: string;
     author: User;
+    images: PostImage[];
     replies: Post[];
     scheduled: boolean;
     scheduledDate: Date | undefined;
@@ -30,7 +31,7 @@ interface CreatePostBody {
 }
 
 interface CreatePostWithMeidaBody extends CreatePostBody{
-    images: File[];
+    imageFiles: File[];
 }
 
 const initialState: PostSliceState = {
@@ -48,6 +49,7 @@ export const createPost = createAsyncThunk(
             let post = {
                 content: body.content,
                 author: body.author,
+                images: body.images,
                 replies: [],
                 scheduled: body.scheduled,
                 scheduledDate: body.scheduledDate,
@@ -73,7 +75,7 @@ export const createPostWithMedia = createAsyncThunk(
     'post/create-media',
     async (body:CreatePostWithMeidaBody, thunkAPI) => {
         try {
-            const images = body.images;
+            const images = body.imageFiles;
 
             let data = new FormData();
 

@@ -24,6 +24,11 @@ const initialState:GifSliceState = {
     error: false
 }
 
+export interface NextGifPayload {
+    term: string;
+    next: string;
+}
+
 export const fetchGifCategories = createAsyncThunk(
     'gif/category',
     async (payload, thunkAPI) => {
@@ -61,6 +66,22 @@ export const fetchGifsByTerm = createAsyncThunk(
                 data: result.data,
                 term: payload
             }
+        } catch (e) {
+            return thunkAPI.rejectWithValue(e);
+        }
+    }
+)
+
+export const fetchNextGifs = createAsyncThunk(
+    'gif/next',
+    async(payload:NextGifPayload, thunkAPI) => {
+        try {
+            let clientKey = 'vblog'
+            let searchUrl = `https://tenor.googleapis.com/v2/search?q=${payload}&key=${TENOR_KEY}&client_key=${clientKey}&limit=32&pos=${payload.next}`;
+
+            let result = await axios.get(searchUrl);
+
+            return result.data;
         } catch (e) {
             return thunkAPI.rejectWithValue(e);
         }
@@ -110,6 +131,25 @@ export const GifSlice = createSlice({
 
             return state;
         });
+
+        builder.addCase(fetchNextGifs.fulfilled, (state, action) => {
+            let results = action.payload.results;
+
+            let gifUrls:string[] = [];
+
+            results.forEach((item:any) => {
+                gifUrls.push(item.media_formats.gif.url);
+            });
+
+            state = {
+                ...state,
+                gifs: [...state.gifs, ...gifUrls],
+                next: action.payload.next,
+                loading: false
+            }
+
+            return state;
+        })
         
         builder.addMatcher(isPending, (state, action) => {
             state.loading = true;

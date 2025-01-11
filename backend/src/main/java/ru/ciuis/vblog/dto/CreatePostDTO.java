@@ -1,17 +1,16 @@
 package ru.ciuis.vblog.dto;
 
-import ru.ciuis.vblog.model.AppUser;
-import ru.ciuis.vblog.model.Audience;
-import ru.ciuis.vblog.model.Post;
-import ru.ciuis.vblog.model.ReplyRestriction;
+import ru.ciuis.vblog.model.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public class CreatePostDTO {
     private String content;
     private AppUser author;
     Set<Post> replies;
+    private List<Image> images;
     private Boolean scheduled;
     private Date scheduledDate;
     private Audience audience;
@@ -20,10 +19,11 @@ public class CreatePostDTO {
     public CreatePostDTO() {
     }
 
-    public CreatePostDTO(String content, AppUser author, Set<Post> replies, Boolean scheduled, Date scheduledDate, Audience audience, ReplyRestriction replyRestriction) {
+    public CreatePostDTO(String content, AppUser author, Set<Post> replies, List<Image> images, Boolean scheduled, Date scheduledDate, Audience audience, ReplyRestriction replyRestriction) {
         this.content = content;
         this.author = author;
         this.replies = replies;
+        this.images = images;
         this.scheduled = scheduled;
         this.scheduledDate = scheduledDate;
         this.audience = audience;
@@ -52,6 +52,14 @@ public class CreatePostDTO {
 
     public void setReplies(Set<Post> replies) {
         this.replies = replies;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 
     public Boolean getScheduled() {
@@ -92,6 +100,7 @@ public class CreatePostDTO {
                 "content='" + content + '\'' +
                 ", author=" + author +
                 ", replies=" + replies +
+                ", images=" + images +
                 ", scheduled=" + scheduled +
                 ", scheduledDate=" + scheduledDate +
                 ", audience=" + audience +
