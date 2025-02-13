@@ -15,11 +15,13 @@ public class CreatePostDTO {
     private Date scheduledDate;
     private Audience audience;
     private ReplyRestriction replyRestriction;
+    private Poll poll;
 
     public CreatePostDTO() {
     }
 
-    public CreatePostDTO(String content, AppUser author, Set<Post> replies, List<Image> images, Boolean scheduled, Date scheduledDate, Audience audience, ReplyRestriction replyRestriction) {
+    public CreatePostDTO(String content, AppUser author, Set<Post> replies, List<Image> images, Boolean scheduled,
+                         Date scheduledDate, Audience audience, ReplyRestriction replyRestriction, Poll poll) {
         this.content = content;
         this.author = author;
         this.replies = replies;
@@ -28,6 +30,7 @@ public class CreatePostDTO {
         this.scheduledDate = scheduledDate;
         this.audience = audience;
         this.replyRestriction = replyRestriction;
+        this.poll = poll;
     }
 
     public String getContent() {
@@ -94,6 +97,14 @@ public class CreatePostDTO {
         this.replyRestriction = replyRestriction;
     }
 
+    public Poll getPoll() {
+        return poll;
+    }
+
+    public void setPoll(Poll poll) {
+        this.poll = poll;
+    }
+
     @Override
     public String toString() {
         return "CreatePostDTO{" +
@@ -105,6 +116,7 @@ public class CreatePostDTO {
                 ", scheduledDate=" + scheduledDate +
                 ", audience=" + audience +
                 ", replyRestriction=" + replyRestriction +
+                ", poll=" + poll +
                 '}';
     }
 }

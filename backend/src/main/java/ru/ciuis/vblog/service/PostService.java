@@ -9,9 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.ciuis.vblog.dto.CreatePostDTO;
 import ru.ciuis.vblog.exception.PostDoesNotExistException;
 import ru.ciuis.vblog.exception.UnableToCreatePostException;
-import ru.ciuis.vblog.model.AppUser;
-import ru.ciuis.vblog.model.Image;
-import ru.ciuis.vblog.model.Post;
+import ru.ciuis.vblog.model.*;
 import ru.ciuis.vblog.repository.PostRepository;
 
 import java.util.*;
@@ -21,17 +19,20 @@ import java.util.*;
 public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
+    private final PollService pollService;
 
     @Autowired
-    public PostService(PostRepository postRepository, ImageService imageService) {
+    public PostService(PostRepository postRepository, ImageService imageService, PollService pollService) {
         this.postRepository = postRepository;
         this.imageService = imageService;
+        this.pollService = pollService;
     }
 
     public Post createPost(CreatePostDTO dto) {
         Image savedGif;
 
-        if (!dto.getImages().isEmpty()) {
+        //If true, there is a single gif
+        if (dto.getImages() != null && !dto.getImages().isEmpty()) {
             List<Image> gifList = dto.getImages();
             Image gif = gifList.getFirst();
             gif.setImagePath(gif.getImageURL());
@@ -41,6 +42,29 @@ public class PostService {
             gifList.add(savedGif);
             dto.setImages(gifList);
         }
+
+        //If true, there is a poll that needs to be created
+        Poll savedPoll;
+        if (dto.getPoll() != null) {
+            Poll p = new Poll();
+            p.setEndTime(dto.getPoll().getEndTime());
+            p.setPollChoiceList(new ArrayList<>());
+            savedPoll = pollService.generatePoll(p);
+            List<PollChoice> pollChoices = new ArrayList<PollChoice>();
+            List<PollChoice> choices = dto.getPoll().getPollChoiceList();
+
+            for (PollChoice choice : choices) {
+                choice.setPoll(savedPoll);
+                choice = pollService.generatePollChoice(choice);
+                pollChoices.add(choice);
+            }
+
+            savedPoll.setPollChoiceList(pollChoices);
+            savedPoll = pollService.generatePoll(savedPoll);
+
+            System.out.println(savedPoll);
+        }
+
 
         Post p = new Post();
         p.setContent(dto.getContent());
@@ -110,7 +134,6 @@ public class PostService {
     }
 
     public Set<Post> getAllPostsByAuthor(AppUser author) {
-
         return postRepository.findByAuthor(author).orElse(new HashSet<>());
     }
 

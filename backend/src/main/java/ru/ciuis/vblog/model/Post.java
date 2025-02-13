@@ -83,6 +83,10 @@ public class Post {
     @Column(name = "reply_restriction")
     private ReplyRestriction replyRestriction;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="poll_id", referencedColumnName = "poll_id")
+    private Poll poll;
+
     public Post() {
         this.likes = new HashSet<>();
         this.images = new ArrayList<>();
@@ -105,7 +109,8 @@ public class Post {
                 Boolean scheduled,
                 Date scheduledDate,
                 Audience audience,
-                ReplyRestriction replyRestriction) {
+                ReplyRestriction replyRestriction,
+                Poll poll) {
         this.postId = postId;
         this.content = content;
         this.postedDate = postedDate;
@@ -120,6 +125,7 @@ public class Post {
         this.scheduledDate = scheduledDate;
         this.audience = audience;
         this.replyRestriction = replyRestriction;
+        this.poll = poll;
     }
 
     public Long getPostId() {
@@ -234,6 +240,14 @@ public class Post {
         this.replyRestriction = replyRestriction;
     }
 
+    public Poll getPoll() {
+        return poll;
+    }
+
+    public void setPoll(Poll poll) {
+        this.poll = poll;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -251,6 +265,7 @@ public class Post {
                 ", scheduledDate=" + scheduledDate +
                 ", audience=" + audience +
                 ", replyRestriction=" + replyRestriction +
+                ", poll=" + poll +
                 '}';
     }
 }
